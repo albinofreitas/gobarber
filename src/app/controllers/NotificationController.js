@@ -19,6 +19,25 @@ class NotificationController {
 
     return res.json(notifications);
   }
+
+  async update(req, res) {
+    const notification = await Notification.findById(req.params.id);
+
+    if (!notification) {
+      return res.status(404).json({ error: 'Notification not found' });
+    }
+
+    if (notification.user !== req.userId) {
+      return res.status(401).json({
+        error: 'You cannot update a notification that belongs to another user',
+      });
+    }
+
+    notification.read = true;
+    notification.save();
+
+    return res.json(notification);
+  }
 }
 
 export default new NotificationController();
