@@ -18,7 +18,7 @@ class AppointmentController {
         user_id: req.userId,
         canceled_at: null,
       },
-      attributes: ['id', 'date'],
+      attributes: ['id', 'date', 'past', 'cancelable'],
       order: ['date'],
       include: [
         {
@@ -138,9 +138,7 @@ class AppointmentController {
       });
     }
 
-    const dateWithSub = subHours(appointment.date, 2);
-
-    if (isBefore(dateWithSub, new Date())) {
+    if (!appointment.cancelable) {
       return res
         .status(401)
         .json({ error: 'You can only cacel appointments 2 hours in advance' });
