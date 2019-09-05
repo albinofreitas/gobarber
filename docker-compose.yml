@@ -1,0 +1,26 @@
+version: "3"
+services:
+  app:
+    build: ./docker/app
+    links:
+      - postgres
+      - mongo
+      - redis
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=gobarber
+      - DB_USER=gobarber
+      - MONGO_URL="mongodb://mongo/gobarber"
+      - REDIS_HOST=redis
+  queue:
+    build: ./docker/queue
+    links:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+  postgres:
+    build: ./docker/postgres
+  mongo:
+    build: ./docker/mongo
+  redis:
+    build: ./docker/redis
